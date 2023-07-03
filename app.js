@@ -39,7 +39,7 @@ app.use("/api/game/testing", GameTestingRouter);
 
 // Find 404 and hand over to error handler
 app.use((req, res, next) => {
-  next(createError(404));
+  return next(createError(404, 'File not found'));
 });
 
 // error handler
