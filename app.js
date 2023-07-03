@@ -1,4 +1,3 @@
-var createError = require('http-errors')
 const express = require("express");
 const app = express();
 var bodyParser = require("body-parser");
@@ -14,6 +13,9 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use('/files',express.static('files'))
+
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -42,6 +44,8 @@ app.use("/api/game/testing", GameTestingRouter);
 app.use((req, res, next) => {
   return next(createError(404, 'File not found'));
 });
+
+
 
 // error handler
 app.use(function (err, req, res, next) {
