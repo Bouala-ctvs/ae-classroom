@@ -4,7 +4,7 @@ const mongodb = require("./api/database/mongodb");
 
 const server = http.createServer(app);
 const port =  process.env.PORT || 7000;
-
+console.log(port);
 async function StartAPI() {
   await mongodb.connectDB();
 
