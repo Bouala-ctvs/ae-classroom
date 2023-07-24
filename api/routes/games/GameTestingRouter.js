@@ -7,5 +7,6 @@ router.post("/insert", gameTestingController.insertGame);
 router.post("/insert/list", gameTestingController.insertListGame);
 router.put("/update/:id", gameTestingController.updateGame);
 router.delete("/delete/:id", gameTestingController.deleteGame);
+router.post("/get/file", gameTestingController.readFile);
 
 module.exports = router;
