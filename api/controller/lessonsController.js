@@ -30,13 +30,32 @@ const insertLesson = async (req, res, next) => {
 };
 
 const insertListLesson = async (req, res, next) => {
-  //   console.log(req.body);
+  //  console.log(req.body);
+  var dataList = req.body.data_list;
+  var errorCount = 0;
+  var errMsg = "";
   lessonsModel.deleteMany({
-      lesson_class: 3
+      lesson_class: dataList[0].lesson_class
     }).then((err, data) => {
-      res.status(200).json(resModel.responseData("00", "Successful", []));
+      for (let i = 0; i < dataList.length; i++) {
+        const el = dataList[i];
+        lessonsModel
+          .create(el)
+          .then((err, data) => {})
+          .catch((err) => {
+            errMsg = errMsg + err + "; ";
+            errorCount++;
+          });
+      }
+      console.log("errorCount", errorCount);
+      if (errorCount <= 0) {
+        res.status(200).json(resModel.responseData("00", "Successful", []));
+      } else {
+        res.status(200).json(resModel.responseData("01", errMsg, []));
+      }
     })
     .catch((err) => {
+      console.log(err);
       res.status(200).json(resModel.responseData("01", err, []));
     });
 
