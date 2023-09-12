@@ -47,7 +47,6 @@ const insertListLesson = async (req, res, next) => {
             errorCount++;
           });
       }
-      console.log("errorCount", errorCount);
       if (errorCount <= 0) {
         res.status(200).json(resModel.responseData("00", "Successful", []));
       } else {
