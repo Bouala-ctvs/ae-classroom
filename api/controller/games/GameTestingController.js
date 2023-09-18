@@ -99,7 +99,7 @@ const readFile = async (req, res, next) => {
     var isError = false;
     var errorString = ""
     var fileData = []
-    fileModel.deleteMany()
+   await fileModel.deleteMany()
     // .then((err, data) => {
     //     console.log("delete success");
     // })
