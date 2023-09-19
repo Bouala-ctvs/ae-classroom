@@ -1,6 +1,7 @@
 const gameModel = require("../../models/games/GameTestingModel");
 const resModel = require("../../models/responseModel");
 const fileModel = require("../../models/fileModel");
+const filePathModel = require("../../models/filePathModel");
 
 
 const fs = require('fs');
@@ -42,25 +43,25 @@ const insertListGame = async (req, res, next) => {
         game_id: req.body.data_list[0].game_id
     }
     gameModel.deleteMany(params).then((err, data) => {
-        var dataList = req.body.data_list;
-        var errorCount = 0;
-        var errMsg = "";
-        for (let i = 0; i < dataList.length; i++) {
-            const el = dataList[i];
-            gameModel
-                .create(el)
-                .then((err, data) => { })
-                .catch((err) => {
-                    errMsg = errMsg + err + "; ";
-                    errorCount++;
-                });
-        }
-        if (errorCount <= 0) {
-            res.status(200).json(resModel.responseData("00", "Successful", []));
-        } else {
-            res.status(200).json(resModel.responseData("01", errMsg, []));
-        }
-    })
+            var dataList = req.body.data_list;
+            var errorCount = 0;
+            var errMsg = "";
+            for (let i = 0; i < dataList.length; i++) {
+                const el = dataList[i];
+                gameModel
+                    .create(el)
+                    .then((err, data) => {})
+                    .catch((err) => {
+                        errMsg = errMsg + err + "; ";
+                        errorCount++;
+                    });
+            }
+            if (errorCount <= 0) {
+                res.status(200).json(resModel.responseData("00", "Successful", []));
+            } else {
+                res.status(200).json(resModel.responseData("01", errMsg, []));
+            }
+        })
         .catch((err) => {
             res.status(200).json(resModel.responseData("01", err, []));
         });
@@ -95,11 +96,11 @@ const deleteGame = async (req, res, next) => {
 
 
 const readFile = async (req, res, next) => {
-    var folderList =req.body.folder_List;
+    var folderList = req.body.folder_List;
     var isError = false;
     var errorString = ""
     var fileData = []
-   await fileModel.deleteMany()
+    await fileModel.deleteMany()
     // .then((err, data) => {
     //     console.log("delete success");
     // })
@@ -129,8 +130,7 @@ async function getFileName(game_id, folder, domain) {
             if (err) {
                 fileData = [];
                 resolve(fileData)
-            }
-            else {
+            } else {
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     fileData.push(domain + folder.replace(".", "") + "/" + file)
@@ -155,6 +155,26 @@ async function getFileName(game_id, folder, domain) {
     })
 }
 
+
+const insertFilePath = async (req, res, next) => {
+    var body = req.body.pathList;
+    if (req.body.pathList.length > 0) {
+        await filePathModel.deleteMany()
+        await filePathModel.create({
+                pathList: body.toString()
+            })
+            .then((err, data) => {
+                res.status(200).json(resModel.responseData("00", "Successful"));
+            })
+            .catch((err) => {
+                res.status(200).json(resModel.responseData("01", err.message));
+            });
+    } else {
+        res.status(200).json(resModel.responseData("02", "No file path"));
+    }
+}
+
+
 module.exports = {
     getGameList,
     insertGame,
@@ -162,4 +182,5 @@ module.exports = {
     updateGame,
     deleteGame,
     readFile,
+    insertFilePath,
 };
